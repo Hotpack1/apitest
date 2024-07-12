@@ -55,7 +55,7 @@
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
-span .fa-bars{
+section .fa-bars{
     display: none;
 }
 #input-area{
@@ -78,15 +78,21 @@ span .fa-bars{
     color: #f1f1f1;
  }
 
- .sidebar .closebtn {
+.sidebar .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
-  }
+}
 
+.top-menu {
+    display: flex;
+}
 
+i {
+    padding-right: 3px;
+}
 
 
 
@@ -97,6 +103,6 @@ span .fa-bars{
 
     }
     .sidebar button {font-size: 18px;}
-    span .fa-bars{display: block;}
+    section .fa-bars{display: block;}
     .menus{display: none;}
   }

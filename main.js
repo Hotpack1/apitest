@@ -1,7 +1,9 @@
 //const API_KEY = `52a44242974f42108a4b865ae7206ff6`
 let newsList = [];
 const menus = document.querySelectorAll(".menus button");
-menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)))
+menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)));
+const sideMenuList = document.querySelectorAll(".side-menu-list button");
+sideMenuList.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)));
 let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`)
 
 

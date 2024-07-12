@@ -20,12 +20,15 @@
             <button>Technology</button>
         </div>
     </div>
-    <span onclick="openNav()"><i class="fa-solid fa-bars"></i></span>
+    
     
     
     <section class="container">
         <section>
-            <i class="fas fa-search icon-button" onclick="openSearchBox()"></i>
+            <span class="top-menu">
+                <i class="fa-solid fa-bars" onclick="openNav()"></i>
+                <i class="fas fa-search icon-button" onclick="openSearchBox()"></i>
+            </span>
                 <span id="input-area">
                     <input type="text" id="search-input" placeholder="search" />
                     <button class="search-button" onclick="getNewsByKeyword()">Go</button>
