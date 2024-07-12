@@ -1,36 +1,48 @@
 //const API_KEY = `52a44242974f42108a4b865ae7206ff6`
 let newsList = [];
-const menus = document.querySelectorAll(".menus button");
+const menus = document.querySelectorAll(".menus button, .side-menu-list button");
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)));
-const sideMenuList = document.querySelectorAll(".side-menu-list button");
-sideMenuList.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)));
 let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`)
 
 
 
 const getNews = async () => {
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if(response.status===200){
+      if(data.articles.length===0){
+        throw new Error("No result for this search");
+      }
+      newsList = data.articles;
+    render();
+    }
+    else {
+      throw new Error(data.message);
+    }
+    
+  } catch (error) {
+    errorRender(error.message);
+  }
+  
 }
 
 const getLatestNews = async () =>{
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`);
-  getNews();
+  await getNews();
     
 }
 
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`);
-  getNews();
+  await getNews();
 };
 
 const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&q=${keyword}`);
-  getNews();
+  await getNews();
 };
 
 
@@ -70,7 +82,14 @@ const render = () => {
 </div>`).join("");
     
     document.getElementById("news-board").innerHTML=newsHTML;
-}
+};
+
+const errorRender =(errorMessage)=>{
+  const errorHTML = 
+    `<div class="alert alert-danger" role="alert">${errorMessage}</div>`;
+
+    document.getElementById("news-board").innerHTML=errorHTML
+};
 
 
 
