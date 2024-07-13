@@ -2,20 +2,34 @@
 let newsList = [];
 const menus = document.querySelectorAll(".menus button, .side-menu-list button");
 menus.forEach(menu=>menu.addEventListener("click",(event)=>getNewsByCategory(event)));
-let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`)
+let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr`);
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
+let firstPage;
+let lastPage;
+let totalPages;
+
 
 
 
 const getNews = async () => {
   try {
+    url.searchParams.set("page",page);
+    url.searchParams.set("pageSize",pageSize);
     const response = await fetch(url);
     const data = await response.json();
+    console.log("ddd",data);
     if(response.status===200){
       if(data.articles.length===0){
         throw new Error("No result for this search");
       }
       newsList = data.articles;
+      totalResults = data.totalResults;
     render();
+    pagiNationRender();
+    
     }
     else {
       throw new Error(data.message);
@@ -91,6 +105,60 @@ const errorRender =(errorMessage)=>{
     document.getElementById("news-board").innerHTML=errorHTML
 };
 
+const pagiNationRender=()=>{
+  totalPages = Math.ceil(totalResults/pageSize);
 
+  const pageGroup = Math.ceil(page/groupSize);
+
+
+  const lastPage = pageGroup * groupSize;
+
+  
+  
+  if(lastPage>totalPages){
+    lastPage = totalPages;
+  }
+
+
+
+  firstPage = lastPage - (groupSize - 1)<=0? 1:lastPage - (groupSize - 1);
+
+
+let pagiNationHTML=``;
+pagiNationHTML += `<li class="page-item " onclick="moveToPrev()"><a class="page-link">이전</a></li>`
+
+
+for(let i=firstPage;i<=lastPage;i++){
+    pagiNationHTML += `<li class="page-item ${i===page?"active": ''}" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`
+}
+
+
+
+pagiNationHTML += `<li class="page-item " onclick="moveToNext()"><a class="page-link">다음</a></li>`
+
+document.querySelector(".pagination").innerHTML = pagiNationHTML;
+
+};
+
+const moveToPage = (pageNum) => {
+  console.log("ga",pageNum);
+  page = pageNum;
+  getNews();
+};
+
+const moveToPrev = () => {
+  if(page !=1){
+    page -=1;
+  }
+  getNews();
+};
+
+const moveToNext = () => {
+  if(page != totalPages){
+    page += 1;
+  }
+  
+  getNews();
+};
 
 getLatestNews();
