@@ -50,7 +50,11 @@ const getLatestNews = async () =>{
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?country=kr&category=${category}`);
+  page = 1;
+  
   await getNews();
+  
+
 };
 
 const getNewsByKeyword = async () => {
@@ -106,12 +110,13 @@ const errorRender =(errorMessage)=>{
 };
 
 const pagiNationRender=()=>{
+  let pagiNationHTML= ``;
   totalPages = Math.ceil(totalResults/pageSize);
 
   const pageGroup = Math.ceil(page/groupSize);
 
 
-  const lastPage = pageGroup * groupSize;
+  lastPage = pageGroup * groupSize;
 
   
   
@@ -124,17 +129,25 @@ const pagiNationRender=()=>{
   firstPage = lastPage - (groupSize - 1)<=0? 1:lastPage - (groupSize - 1);
 
 
-let pagiNationHTML=``;
-pagiNationHTML += `<li class="page-item " onclick="moveToPrev()"><a class="page-link">이전</a></li>`
 
+ 
+ if (page > 1) {
+  pagiNationHTML +=
+  `<li class="page-item" onclick="moveToPrev()"><a class="page-link">&lt;&lt;</a></li>
+   <li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link">이전</a></li>`;
+}
 
 for(let i=firstPage;i<=lastPage;i++){
     pagiNationHTML += `<li class="page-item ${i===page?"active": ''}" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`
 }
 
+if (page < totalPages) {
+  pagiNationHTML += 
+  `<li class="page-item" onclick="moveToPage(${page+1})"><a class="page-link">다음</a></li>
+   <li class="page-item" onclick="moveToNext()"><a class="page-link">&gt;&gt;</a></li>`;
+}
 
 
-pagiNationHTML += `<li class="page-item " onclick="moveToNext()"><a class="page-link">다음</a></li>`
 
 document.querySelector(".pagination").innerHTML = pagiNationHTML;
 
@@ -148,14 +161,14 @@ const moveToPage = (pageNum) => {
 
 const moveToPrev = () => {
   if(page !=1){
-    page -=1;
+    page =1;
   }
   getNews();
 };
 
 const moveToNext = () => {
   if(page != totalPages){
-    page += 1;
+    page = totalPages;
   }
   
   getNews();
